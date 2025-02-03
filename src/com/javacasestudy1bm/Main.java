@@ -7,13 +7,15 @@ public class Main {
         Bank bm = new Bank("HDFC", "HDFC018FB");
 //        bm.displayAllAccount();
         System.out.println(bm.getBankName());
-//        bm.deposit();
-//        bm.withdraw();
+        bm.deposit();
+        bm.deposit();
+        bm.withdraw();
+        bm.withdraw();
 //        bm.checkCurrentBalance();
         bm.displayTransactions();
 //        bm.totalWithdrawAmount();
 //        bm.totalDepositAmount();
-        bm.getTransactionsBetweenDates();
+//        bm.getTransactionsBetweenDates();
     }
 
 }

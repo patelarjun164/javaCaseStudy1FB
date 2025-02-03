@@ -1,6 +1,8 @@
 package com.javacasestudy1bm;
 
 import java.util.Scanner;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 
 public class Bank {
     Scanner sc = new Scanner(System.in);
@@ -156,8 +158,25 @@ public class Bank {
     }
 
     public void getTransactionsBetweenDates() {
-        System.out.println("Enter Starting Date:");
+        System.out.println("Enter the Account Number");
+        long tempAcNo = sc.nextLong();
+        int indexOfAccount = findAccountWithAccNo(tempAcNo);
 
-        System.out.println("Enter Starting Date:");
+        if (indexOfAccount == -1) {
+            System.out.println("Account not exists");
+            return;
+        }
+
+        System.out.print("Enter Starting date (yyyy-MM-dd): ");
+
+        sc.nextLine();
+        String userInput = sc.nextLine();
+        LocalDate startDate = LocalDate.parse(userInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        System.out.println("Enter Ending Date (yyyy-MM-dd): ");
+        userInput = sc.nextLine();
+        LocalDate endDate = LocalDate.parse(userInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        bankAccounts[indexOfAccount].transBetweenDates(startDate, endDate);
     }
 }

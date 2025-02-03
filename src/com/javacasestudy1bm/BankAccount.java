@@ -67,10 +67,14 @@ public class BankAccount {
 
     public void deposit(double depositAmount) {
         setCurrentBalance(getCurrentBalance() + depositAmount);
+        trr[tCount] = new TransactionHistory(123457, "deposit", depositAmount, LocalDate.now(), LocalTime.now());
+        tCount++;
     }
 
     public void withdraw(double withdrawAmount) {
         setCurrentBalance(getCurrentBalance() - withdrawAmount);
+        trr[tCount] = new TransactionHistory(123458, "withdraw", withdrawAmount, LocalDate.now(), LocalTime.now());
+        tCount++;
     }
 
     public double calTotalWithdraw() {
@@ -105,4 +109,12 @@ public class BankAccount {
     }
 
 
+    public void transBetweenDates(LocalDate startDate, LocalDate endDate) {
+        for (int i = 0; i < tCount; i++) {
+            if ((trr[i].getTransactionDate().isAfter(startDate) || trr[i].getTransactionDate().isEqual(startDate)) &&
+                    (trr[i].getTransactionDate().isBefore(endDate) || trr[i].getTransactionDate().isEqual(endDate))) {
+                trr[i].displatSingleTransaction();
+            }
+        }
+    }
 }
