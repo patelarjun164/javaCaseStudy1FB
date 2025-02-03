@@ -5,8 +5,15 @@ public class Main {
         System.out.println("Hello, World!");
 
         Bank bm = new Bank("HDFC", "HDFC018FB");
-        bm.displayAllAccount();
+//        bm.displayAllAccount();
         System.out.println(bm.getBankName());
-//        sdasd
+//        bm.deposit();
+//        bm.withdraw();
+//        bm.checkCurrentBalance();
+        bm.displayTransactions();
+//        bm.totalWithdrawAmount();
+//        bm.totalDepositAmount();
+        bm.getTransactionsBetweenDates();
     }
+
 }
