@@ -7,9 +7,9 @@ import java.time.LocalDate;
 public class Bank {
     Scanner sc = new Scanner(System.in);
     public static int count = 5;
+    public static long accountNum = 12345105;
     private String bankName;
     private String ifscCode;
-
     private BankAccount[] bankAccounts = new BankAccount[10];
 
     public Bank(String bankName, String ifscCode) {
@@ -23,8 +23,8 @@ public class Bank {
         bankAccounts[4] = new BankAccount(12345104, "Rishi Awasthi", 42000, "Loan");
     }
 
-    public void displayAllAccount() {
-        for (int i = 0; i < 5; i++) {
+    public void displayAllAccounts() {
+        for (int i = 0; i < count; i++) {
             System.out.println("\nAccount Number: " + bankAccounts[i].getAccountNo());
             System.out.println("Account Holder Name: " + bankAccounts[i].getAccountHolderName());
             System.out.println("Account Type: " + bankAccounts[i].getAccountType());
@@ -56,14 +56,46 @@ public class Bank {
         return -1;
     }
 
-    //counter activities
-    public void deposit() {
-        System.out.println("Enter the Account Number");
-        long tempAcNo = sc.nextLong();
-        int indexOfAccount = findAccountWithAccNo(tempAcNo);
+    private int findAccount(long accNo) {
+        for (int i = 0; i < count; i++) {
+            if (bankAccounts[i].getAccountNo() == accNo) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
+    private long getAccountNumberInput() {
+        System.out.print("Enter Account Number: ");
+        return sc.nextLong();
+    }
+
+    //counter activities
+    public void createAccount() {
+        long tempAccountNum = accountNum++;
+        System.out.println("Your Account number is " + tempAccountNum);
+        System.out.println("Enter Account Holder name");
+        String accountHolderName = sc.nextLine();
+        System.out.println("Enter the type of Account");
+        String accountType = sc.nextLine();
+        bankAccounts[count] = new BankAccount(tempAccountNum, accountHolderName, 0, accountType);
+        System.out.println("Enter the amount youw want to deposit, Min deposit amount is 5000");
+        double depositAmount = sc.nextDouble();
+        while (depositAmount < 5000) {
+            System.out.println("Amount should be more than 5000");
+            System.out.println("Enter amount greater than 5000");
+            depositAmount = sc.nextDouble();
+        }
+        bankAccounts[count].deposit(depositAmount);
+        count++;
+        System.out.println("Account Created Successfully...!");
+    }
+
+    public void deposit() {
+        long accNo = getAccountNumberInput();
+        int indexOfAccount = findAccount(accNo);
         if (indexOfAccount == -1) {
-            System.out.println("Account not exists");
+            System.out.println("Account not found!");
             return;
         }
 
@@ -71,36 +103,21 @@ public class Bank {
 
         System.out.println("Enter amount you want to deposit");
         double depositAmount = sc.nextDouble();
-        bankAccounts[indexOfAccount].withdraw(depositAmount);
-        System.out.println("Amount Deposited Successfully");
-        System.out.println("Updated Balance is: " + bankAccounts[indexOfAccount].getCurrentBalance());
+        bankAccounts[indexOfAccount].deposit(depositAmount);
     }
 
     public void withdraw() {
-        System.out.println("Enter the Account Number");
-        long tempAcNo = sc.nextLong();
-        int indexOfAccount = findAccountWithAccNo(tempAcNo);
-
+        long accNo = getAccountNumberInput();
+        int indexOfAccount = findAccount(accNo);
         if (indexOfAccount == -1) {
-            System.out.println("Account not exists");
+            System.out.println("Account not found!");
             return;
         }
 
         System.out.println("Current balance is: " + bankAccounts[indexOfAccount].getCurrentBalance() + "₹");
-        if (bankAccounts[indexOfAccount].getCurrentBalance() < 0) {
-            System.out.println("Your current Balance is 0, you are not able to withdraw money!");
-            return;
-        }
-
-        if (bankAccounts[indexOfAccount].getCurrentBalance() < BankAccount.getMinBalance()) {
-            System.out.println("Your might charge as your min Balance is less than allowed limit!");
-        }
-
         System.out.println("Enter amount you want to withdraw");
         double withdrawAmount = sc.nextDouble();
         bankAccounts[indexOfAccount].withdraw(withdrawAmount);
-        System.out.println("Amount Debited Successfully");
-        System.out.println("Updated Balance is: " + bankAccounts[indexOfAccount].getCurrentBalance());
     }
 
     public void checkCurrentBalance() {
@@ -154,7 +171,8 @@ public class Bank {
             return;
         }
 
-        System.out.println("Total Deposit Amount is: " + bankAccounts[indexOfAccount].calTotalDeposit() + "₹");;
+        System.out.println("Total Deposit Amount is: " + bankAccounts[indexOfAccount].calTotalDeposit() + "₹");
+        ;
     }
 
     public void getTransactionsBetweenDates() {
@@ -178,5 +196,40 @@ public class Bank {
         LocalDate endDate = LocalDate.parse(userInput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         bankAccounts[indexOfAccount].transBetweenDates(startDate, endDate);
+    }
+
+    //EOD summary
+    public void displayAllTransactionOfBank() {
+        for (int i = 0; i < count; i++) {
+            for (int j = 0; j < bankAccounts[i].gettCount(); j++) {
+                if (bankAccounts[i].trr[j].getTransactionDate().isEqual(LocalDate.now())) {
+                    bankAccounts[i].trr[j].displatSingleTransaction();
+                }
+            }
+        }
+    }
+
+    public void totalDepositFromBank() {
+        double tempDepositAmount=0;
+        for (int i = 0; i < count; i++) {
+            for (int j = 0; j < bankAccounts[i].gettCount(); j++) {
+                if (bankAccounts[i].trr[j].getTransactionDate().isEqual(LocalDate.now()) && bankAccounts[i].trr[j].getType().equals("deposit")) {
+                    tempDepositAmount += bankAccounts[i].trr[j].getAmount();
+                }
+            }
+        }
+        System.out.println("Total Deposit From Bank Today is: "+ tempDepositAmount+"₹");
+    }
+
+    public void totalWithdrawFromBank() {
+        double tempWithdrawAmount=0;
+        for (int i = 0; i < count; i++) {
+            for (int j = 0; j < bankAccounts[i].gettCount(); j++) {
+                if (bankAccounts[i].trr[j].getTransactionDate().isEqual(LocalDate.now()) && bankAccounts[i].trr[j].getType().equals("withdraw")) {
+                    tempWithdrawAmount += bankAccounts[i].trr[j].getAmount();
+                }
+            }
+        }
+        System.out.println("Total Withdraw From Bank Today is: "+ tempWithdrawAmount+"₹");
     }
 }
