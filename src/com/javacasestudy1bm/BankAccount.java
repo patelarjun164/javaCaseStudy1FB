@@ -125,7 +125,6 @@ public class BankAccount {
         }
     }
 
-
     public void transBetweenDates(LocalDate startDate, LocalDate endDate) {
         for (int i = 0; i < tCount; i++) {
             if ((trr[i].getTransactionDate().isAfter(startDate) || trr[i].getTransactionDate().isEqual(startDate)) &&

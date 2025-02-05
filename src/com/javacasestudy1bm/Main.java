@@ -21,6 +21,7 @@ public class Main {
             System.out.println("10. Display All Transaction of Today");
             System.out.println("11. Total Deposit Amount From Bank");
             System.out.println("12. Total Withdraw Amount From Bank");
+            System.out.println("13. Delete Bank Account");
             System.out.println("0. Exit");
             System.out.print("Choose an option: ");
 
@@ -39,6 +40,7 @@ public class Main {
                 case 10 -> hdfcBank.displayAllTransactionOfBank();
                 case 11 -> hdfcBank.totalDepositFromBank();
                 case 12 -> hdfcBank.totalWithdrawFromBank();
+                case 13 -> hdfcBank.deleteAccount();
                 case 0 -> {
                     System.out.println("Exiting Banking System...");
                     sc.close();

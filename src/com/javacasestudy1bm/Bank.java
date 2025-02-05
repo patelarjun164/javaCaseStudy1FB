@@ -232,4 +232,30 @@ public class Bank {
         }
         System.out.println("Total Withdraw From Bank Today is: "+ tempWithdrawAmount+"₹");
     }
+
+    public void deleteAccount() {
+        long accNo = getAccountNumberInput();
+        int indexOfAccount = findAccount(accNo);
+        if (indexOfAccount == -1) {
+            System.out.println("Account not found!");
+            return;
+        }
+
+        System.out.println("Account Number is " + bankAccounts[indexOfAccount].getAccountNo());
+        System.out.println("Current balance is: " + bankAccounts[indexOfAccount].getCurrentBalance() + "₹");
+        System.out.println("Press 1 to confirm your action, you can not reverse once account deleted!");
+        System.out.println("Press 0 to cancel");
+        int tempDecision = sc.nextInt();
+        if(tempDecision==1){
+            for (int i = indexOfAccount; i < count-1; i++) {
+                bankAccounts[i] = bankAccounts[i+1];
+            }
+            count--;
+            System.out.println("Account deleted Successfully...!");
+            return;
+        }
+        else {
+            System.out.println("Account Deletion Cancel!");
+        }
+    }
 }
