@@ -7,7 +7,7 @@ public class LoanAccount extends BankAccount{
     private int transactionCount;
 
     public LoanAccount(long accountNo, String accountHolderName, double loanAmount, double interestRate, int tenureMonths) {
-        super(accountNo, accountHolderName, -loanAmount, "Loan");  // Negative balance for loan
+        super(accountNo, accountHolderName,0, "loan");  // Negative balance for loan
         this.interestRate = interestRate;
         this.tenureMonths = tenureMonths;
         this.emiPayment = calculateEMI();
@@ -45,6 +45,11 @@ public class LoanAccount extends BankAccount{
         return true;
     }
 
+    // Check if loan payment is overdue (for late fees)
+    private boolean isLoanOverdue() {
+        return transactionCount < tenureMonths; // If payments are behind schedule
+    }
+
     // Apply late fees if the EMI payment is overdue
     public boolean applyLateFee() {
         if (isLoanOverdue()) {
@@ -56,10 +61,6 @@ public class LoanAccount extends BankAccount{
         return false;
     }
 
-    // Check if loan payment is overdue (for late fees)
-    private boolean isLoanOverdue() {
-        return transactionCount < tenureMonths; // If payments are behind schedule
-    }
 
     // Get remaining loan amount
     public double getRemainingLoanAmount() {
@@ -73,7 +74,7 @@ public class LoanAccount extends BankAccount{
 
     @Override
     public void deposit(double amount) {
-        super.deposit(amount);
+        setCurrentBalance(this.getCurrentBalance() + amount);
         if (getCurrentBalance() >= 0) {
             System.out.println("Loan fully repaid.");
         }

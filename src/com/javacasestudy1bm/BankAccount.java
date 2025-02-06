@@ -3,12 +3,13 @@ package com.javacasestudy1bm;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class BankAccount {
+abstract public class BankAccount {
     private long accountNo;
     private String accountHolderName;
     private double currentBalance;
     private String accountType;
     private int tCount = 3;
+    TransactionHistory[] trr = new TransactionHistory[20];
 
     public int gettCount() {
         return tCount;
@@ -19,7 +20,6 @@ public class BankAccount {
     }
 
 
-    TransactionHistory[] trr = new TransactionHistory[20];
 
     public static double getMinBalance() {
         return minBalance;
@@ -74,25 +74,28 @@ public class BankAccount {
         this.accountType = accountType;
     }
 
-    public void deposit(double depositAmount) {
-        setCurrentBalance(this.getCurrentBalance() + depositAmount);
-        trr[tCount++] = new TransactionHistory(123457, "deposit", depositAmount, LocalDate.now(), LocalTime.now());
-        System.out.println("Deposited ₹" + depositAmount + ". Updated balance: ₹" + this.getCurrentBalance());
-    }
+    abstract public  void deposit(double depositAmount);
 
-    public void withdraw(double withdrawAmount) {
-        if (withdrawAmount <= 0) {
-            System.out.println("Invalid withdrawal amount.");
-            return;
-        }
-        if (currentBalance - withdrawAmount < minBalance) {
-            System.out.println("Insufficient funds. Maintain min balance of ₹" + minBalance);
-            return;
-        }
-        setCurrentBalance(getCurrentBalance() - withdrawAmount);
-        trr[tCount++] = new TransactionHistory(123458, "withdraw", withdrawAmount, LocalDate.now(), LocalTime.now());
-        System.out.println("Deposited ₹" + withdrawAmount + ". Updated balance: ₹" + this.getCurrentBalance());
-    }
+//    abstract public  void deposit(double depositAmount) {
+//        setCurrentBalance(this.getCurrentBalance() + depositAmount);
+//        trr[tCount++] = new TransactionHistory(123457, "deposit", depositAmount, LocalDate.now(), LocalTime.now());
+//        System.out.println("Deposited ₹" + depositAmount + ". Updated balance: ₹" + this.getCurrentBalance());
+//    }
+
+     abstract public void withdraw(double withdrawAmount);
+//    public void withdraw(double withdrawAmount) {
+//        if (withdrawAmount <= 0) {
+//            System.out.println("Invalid withdrawal amount.");
+//            return;
+//        }
+//        if (currentBalance - withdrawAmount < minBalance) {
+//            System.out.println("Insufficient funds. Maintain min balance of ₹" + minBalance);
+//            return;
+//        }
+//        setCurrentBalance(getCurrentBalance() - withdrawAmount);
+//        trr[tCount++] = new TransactionHistory(123458, "withdraw", withdrawAmount, LocalDate.now(), LocalTime.now());
+//        System.out.println("Deposited ₹" + withdrawAmount + ". Updated balance: ₹" + this.getCurrentBalance());
+//    }
 
     public double calTotalWithdraw() {
         double tempTotalWithdrawAmount = 0;

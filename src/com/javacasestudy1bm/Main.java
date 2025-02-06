@@ -14,14 +14,16 @@ public class Main {
             System.out.println("3. Deposit");
             System.out.println("4. Withdraw");
             System.out.println("5. Check Balance");
-            System.out.println("6. View Transactions");
-            System.out.println("7. View Withdraw Total");
-            System.out.println("8. View Deposit Total");
-            System.out.println("9. Transactions Between Dates");
+            System.out.println("6. View Transactions for Account");
+            System.out.println("7. View Withdraw Total for an Account");
+            System.out.println("8. View Deposit Total for an Account");
+            System.out.println("9. Transactions Between Dates for an Account");
             System.out.println("10. Display All Transaction of Today");
             System.out.println("11. Total Deposit Amount From Bank");
             System.out.println("12. Total Withdraw Amount From Bank");
             System.out.println("13. Delete Bank Account");
+            System.out.println("14. Loan Account Operations");
+            System.out.println("15. Saving Account Operations");
             System.out.println("0. Exit");
             System.out.print("Choose an option: ");
 
@@ -41,6 +43,8 @@ public class Main {
                 case 11 -> hdfcBank.totalDepositFromBank();
                 case 12 -> hdfcBank.totalWithdrawFromBank();
                 case 13 -> hdfcBank.deleteAccount();
+                case 14 -> hdfcBank.loanAccountOperations();
+                case 15 -> hdfcBank.savingAccountOperations();
                 case 0 -> {
                     System.out.println("Exiting Banking System...");
                     sc.close();

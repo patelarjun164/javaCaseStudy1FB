@@ -16,11 +16,11 @@ public class Bank {
         this.bankName = bankName;
         this.ifscCode = ifscCode;
 
-        bankAccounts[0] = new BankAccount(12345100, "Arjun Patel", 150000, "Saving");
-        bankAccounts[1] = new BankAccount(12345101, "Rohit Pawar", 12500, "Salary");
-        bankAccounts[2] = new BankAccount(12345102, "Ritik Mahajan", 15500, "Saving");
-        bankAccounts[3] = new BankAccount(12345103, "Harshada", 50000, "Current");
-        bankAccounts[4] = new BankAccount(12345104, "Rishi Awasthi", 42000, "Loan");
+        bankAccounts[0] = new SavingAccount(12345100, "Arjun Patel", 150000);
+        bankAccounts[1] = new SalaryAccount(12345101, "Rohit Pawar", 12500);
+        bankAccounts[2] = new SavingAccount(12345102, "Ritik Mahajan", 15500);
+        bankAccounts[3] = new CurrentAccount(12345103, "Harshada", 50000, 10000);
+        bankAccounts[4] = new LoanAccount(12345104, "Rishi Awasthi", 15000, 6, 9);
     }
 
     public void displayAllAccounts() {
@@ -74,21 +74,65 @@ public class Bank {
     public void createAccount() {
         long tempAccountNum = accountNum++;
         System.out.println("Your Account number is " + tempAccountNum);
+        sc.nextLine();
         System.out.println("Enter Account Holder name");
         String accountHolderName = sc.nextLine();
         System.out.println("Enter the type of Account");
-        String accountType = sc.nextLine();
-        bankAccounts[count] = new BankAccount(tempAccountNum, accountHolderName, 0, accountType);
-        System.out.println("Enter the amount youw want to deposit, Min deposit amount is 5000");
-        double depositAmount = sc.nextDouble();
-        while (depositAmount < 5000) {
-            System.out.println("Amount should be more than 5000");
-            System.out.println("Enter amount greater than 5000");
-            depositAmount = sc.nextDouble();
+        System.out.println("Enter 1 For Saving Account");
+        System.out.println("Enter 2 For Current Account");
+        System.out.println("Enter 3 For Salary Account");
+        System.out.println("Enter 4 For Loan Account");
+        int accountTypeNum = sc.nextInt();
+        //Opening Saving Account
+        if (accountTypeNum == 1) {
+            System.out.println("Enter the amount you want to deposit, Min deposit amount is 5000");
+            double depositAmount = sc.nextDouble();
+            while (depositAmount < 5000) {
+                System.out.println("Amount should be more than 5000");
+                System.out.println("Enter amount greater than 5000");
+                depositAmount = sc.nextDouble();
+            }
+            bankAccounts[count] = new SavingAccount(tempAccountNum, accountHolderName, depositAmount);
+            bankAccounts[count++].deposit(depositAmount);
+            System.out.println("Saving Account Created Successfully.");
+
         }
-        bankAccounts[count].deposit(depositAmount);
-        count++;
-        System.out.println("Account Created Successfully...!");
+        //Opening Current Account
+        else if (accountTypeNum == 2) {
+            //long accountNumber, String accountHolder, double balance, double overdraftLimit
+            System.out.println("Enter the amount you want to deposit, Min deposit amount is 5000");
+            double depositAmount = sc.nextDouble();
+            while (depositAmount < 5000) {
+                System.out.println("Amount should be more than 5000");
+                System.out.println("Enter amount greater than 5000");
+                depositAmount = sc.nextDouble();
+            }
+            System.out.println("Enter Overdraft Limit For this account");
+            double overDraftLimit = sc.nextDouble();
+            bankAccounts[count] = new CurrentAccount(tempAccountNum, accountHolderName, depositAmount,overDraftLimit);
+            bankAccounts[count++].deposit(depositAmount);
+            System.out.println("Current Account Created Successfully.");
+        }
+
+        //Opening Salary Account
+        else if (accountTypeNum == 3){
+            bankAccounts[count++] = new SalaryAccount(tempAccountNum, accountHolderName, 0);
+            System.out.println("Salary Account Created Successfully.");
+        }
+
+        //Opening Loan Account
+        else if (accountTypeNum == 4) {
+            System.out.println("Enter Loan Amount: ");
+            double loanAmount = sc.nextDouble();
+
+            System.out.println("Enter Interest Rate (in %): ");
+            double interestRate = sc.nextDouble();
+
+            System.out.println("Enter Tenure in Months: ");
+            int tenureMonths = sc.nextInt();
+            bankAccounts[count++] = new LoanAccount(tempAccountNum, accountHolderName, loanAmount, interestRate, tenureMonths);
+            System.out.println("Loan Account Created Successfully");
+        }
     }
 
     public void deposit() {
@@ -210,7 +254,7 @@ public class Bank {
     }
 
     public void totalDepositFromBank() {
-        double tempDepositAmount=0;
+        double tempDepositAmount = 0;
         for (int i = 0; i < count; i++) {
             for (int j = 0; j < bankAccounts[i].gettCount(); j++) {
                 if (bankAccounts[i].trr[j].getTransactionDate().isEqual(LocalDate.now()) && bankAccounts[i].trr[j].getType().equals("deposit")) {
@@ -218,11 +262,11 @@ public class Bank {
                 }
             }
         }
-        System.out.println("Total Deposit From Bank Today is: "+ tempDepositAmount+"₹");
+        System.out.println("Total Deposit From Bank Today is: " + tempDepositAmount + "₹");
     }
 
     public void totalWithdrawFromBank() {
-        double tempWithdrawAmount=0;
+        double tempWithdrawAmount = 0;
         for (int i = 0; i < count; i++) {
             for (int j = 0; j < bankAccounts[i].gettCount(); j++) {
                 if (bankAccounts[i].trr[j].getTransactionDate().isEqual(LocalDate.now()) && bankAccounts[i].trr[j].getType().equals("withdraw")) {
@@ -230,7 +274,7 @@ public class Bank {
                 }
             }
         }
-        System.out.println("Total Withdraw From Bank Today is: "+ tempWithdrawAmount+"₹");
+        System.out.println("Total Withdraw From Bank Today is: " + tempWithdrawAmount + "₹");
     }
 
     public void deleteAccount() {
@@ -246,16 +290,128 @@ public class Bank {
         System.out.println("Press 1 to confirm your action, you can not reverse once account deleted!");
         System.out.println("Press 0 to cancel");
         int tempDecision = sc.nextInt();
-        if(tempDecision==1){
-            for (int i = indexOfAccount; i < count-1; i++) {
-                bankAccounts[i] = bankAccounts[i+1];
+        if (tempDecision == 1) {
+            for (int i = indexOfAccount; i < count - 1; i++) {
+                bankAccounts[i] = bankAccounts[i + 1];
             }
             count--;
             System.out.println("Account deleted Successfully...!");
             return;
-        }
-        else {
+        } else {
             System.out.println("Account Deletion Cancel!");
         }
     }
+
+    // Add a method to handle loan account operations
+    public void loanAccountOperations() {
+        System.out.print("Enter Loan Account Number: ");
+        long accNo = sc.nextLong();
+        int index = findAccount(accNo);
+        if (index == -1 || !(bankAccounts[index] instanceof LoanAccount)) {
+            System.out.println("Invalid Loan Account!");
+            return;
+        }
+
+        System.out.println("\n----- LOAN ACCOUNT OPERATIONS -----");
+        System.out.println("1. Pay EMI");
+        System.out.println("2. Check Loan Balance");
+        System.out.println("3. Apply Late Fees");
+        System.out.println("4. Get Remaining Loan Amount");
+        System.out.println("5. Get Total Repaid Amount");
+        System.out.print("Choose an option: ");
+        int choice = sc.nextInt();
+
+        switch (choice) {
+            case 1 -> payEMI(index);             // Implement this method
+            case 2 -> checkLoanBalance(index);  // Implement this method
+            case 3 -> applyLateFee(index);      // Implement this method
+            case 4 -> getRemainingLoanAmount(index);  // Implement this method
+//            case 5 -> getTotalRepaidAmount(index);   // Implement this method
+            default -> System.out.println("Invalid choice!");
+        }
+    }
+
+    // Method to create a loan account
+//    private void createLoanAccount() {
+//        System.out.println("Enter Account Holder Name: ");
+//        sc.nextLine();  // Clear the buffer
+//        String accountHolderName = sc.nextLine();
+//
+//        System.out.println("Enter Loan Amount: ");
+//        double loanAmount = sc.nextDouble();
+//
+//        System.out.println("Enter Interest Rate (in %): ");
+//        double interestRate = sc.nextDouble();
+//
+//        System.out.println("Enter Tenure in Months: ");
+//        int tenureMonths = sc.nextInt();
+//
+//        // Create the LoanAccount instance and add it to the bank
+//        BankAccount loanAccount = new LoanAccount(accountNum++, accountHolderName, loanAmount, interestRate, tenureMonths);
+//        bankAccounts[count++] = loanAccount;
+//
+//        System.out.println("Loan account created successfully!");
+//    }
+
+    // Method to pay EMI for a loan account
+    private void payEMI(int index) {
+        System.out.print("Enter EMI Payment Amount: ");
+        double amount = sc.nextDouble();
+        if (bankAccounts[index] instanceof LoanAccount loanAccount) {
+            loanAccount.payEMI(amount);
+        } else {
+            System.out.println("Selected Account is NOT a Loan Account, Enter valid Account Number!");
+        }
+    }
+
+    // Method to check the remaining loan balance
+    private void checkLoanBalance(int index) {
+        if (bankAccounts[index] instanceof LoanAccount loanAccount) {
+            System.out.println("Remaining Loan Balance: ₹" + loanAccount.getRemainingLoanAmount());
+        } else {
+            System.out.println("Selected Account is NOT a Loan Account, Enter valid Account Number!");
+        }
+    }
+
+    // Method to apply late fee on a loan account
+    private void applyLateFee(int index) {
+        if (bankAccounts[index] instanceof LoanAccount loanAccount) {
+            if (!loanAccount.applyLateFee()) {
+                System.out.println("No late fee applied, the loan is not overdue.");
+            }
+        } else {
+            System.out.println("Selected Account is NOT a Loan Account, Enter valid Account Number!");
+        }
+    }
+
+    // Method to get the total repaid amount for a loan
+//    private void getTotalRepaidAmount(int index) {
+//        LoanAccount loanAccount = (LoanAccount) bankAccounts[index];
+//        System.out.println("Total Repaid Amount: ₹" + loanAccount.getAmountRepaid());
+//
+//    }
+
+    // Method to get the remaining loan amount
+    private void getRemainingLoanAmount(int index) {
+        LoanAccount loanAccount = (LoanAccount) bankAccounts[index];
+        System.out.println("Remaining Loan Amount: ₹" + loanAccount.getRemainingLoanAmount());
+    }
+
+    public void savingAccountOperations() {
+        //applyinterest
+        long accNo = getAccountNumberInput();
+        int indexOfAccount = findAccount(accNo);
+        if (indexOfAccount == -1) {
+            System.out.println("Account not found!");
+            return;
+        }
+
+        if (bankAccounts[indexOfAccount] instanceof SavingAccount savingAccount) {
+            savingAccount.applyInterest();
+        } else {
+            System.out.println("Entered Account is not Valid!");
+        }
+
+    }
+
 }
