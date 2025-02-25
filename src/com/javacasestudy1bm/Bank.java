@@ -92,7 +92,7 @@ public class Bank {
                 System.out.println("Enter amount greater than 5000");
                 depositAmount = sc.nextDouble();
             }
-            bankAccounts[count] = new SavingAccount(tempAccountNum, accountHolderName, depositAmount);
+            bankAccounts[count] = new SavingAccount(tempAccountNum, accountHolderName, 0);
             bankAccounts[count++].deposit(depositAmount);
             System.out.println("Saving Account Created Successfully.");
 
@@ -109,7 +109,7 @@ public class Bank {
             }
             System.out.println("Enter Overdraft Limit For this account");
             double overDraftLimit = sc.nextDouble();
-            bankAccounts[count] = new CurrentAccount(tempAccountNum, accountHolderName, depositAmount,overDraftLimit);
+            bankAccounts[count] = new CurrentAccount(tempAccountNum, accountHolderName, 0,overDraftLimit);
             bankAccounts[count++].deposit(depositAmount);
             System.out.println("Current Account Created Successfully.");
         }
@@ -247,7 +247,7 @@ public class Bank {
         for (int i = 0; i < count; i++) {
             for (int j = 0; j < bankAccounts[i].gettCount(); j++) {
                 if (bankAccounts[i].trr[j].getTransactionDate().isEqual(LocalDate.now())) {
-                    bankAccounts[i].trr[j].displatSingleTransaction();
+                    bankAccounts[i].trr[j].displaySingleTransaction();
                 }
             }
         }
@@ -326,32 +326,10 @@ public class Bank {
             case 2 -> checkLoanBalance(index);  // Implement this method
             case 3 -> applyLateFee(index);      // Implement this method
             case 4 -> getRemainingLoanAmount(index);  // Implement this method
-//            case 5 -> getTotalRepaidAmount(index);   // Implement this method
+            case 5 -> getTotalRepaidAmount(index);   // Implement this method
             default -> System.out.println("Invalid choice!");
         }
     }
-
-    // Method to create a loan account
-//    private void createLoanAccount() {
-//        System.out.println("Enter Account Holder Name: ");
-//        sc.nextLine();  // Clear the buffer
-//        String accountHolderName = sc.nextLine();
-//
-//        System.out.println("Enter Loan Amount: ");
-//        double loanAmount = sc.nextDouble();
-//
-//        System.out.println("Enter Interest Rate (in %): ");
-//        double interestRate = sc.nextDouble();
-//
-//        System.out.println("Enter Tenure in Months: ");
-//        int tenureMonths = sc.nextInt();
-//
-//        // Create the LoanAccount instance and add it to the bank
-//        BankAccount loanAccount = new LoanAccount(accountNum++, accountHolderName, loanAmount, interestRate, tenureMonths);
-//        bankAccounts[count++] = loanAccount;
-//
-//        System.out.println("Loan account created successfully!");
-//    }
 
     // Method to pay EMI for a loan account
     private void payEMI(int index) {
@@ -385,11 +363,11 @@ public class Bank {
     }
 
     // Method to get the total repaid amount for a loan
-//    private void getTotalRepaidAmount(int index) {
-//        LoanAccount loanAccount = (LoanAccount) bankAccounts[index];
-//        System.out.println("Total Repaid Amount: ₹" + loanAccount.getAmountRepaid());
-//
-//    }
+    private void getTotalRepaidAmount(int index) {
+        LoanAccount loanAccount = (LoanAccount) bankAccounts[index];
+        System.out.println("Total Repaid Amount: ₹" + loanAccount.getAmountRepaid());
+
+    }
 
     // Method to get the remaining loan amount
     private void getRemainingLoanAmount(int index) {

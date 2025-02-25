@@ -5,13 +5,15 @@ public class LoanAccount extends BankAccount{
     private int tenureMonths;
     private double emiPayment;
     private int transactionCount;
+    private double totalRepaidAmount;
 
     public LoanAccount(long accountNo, String accountHolderName, double loanAmount, double interestRate, int tenureMonths) {
-        super(accountNo, accountHolderName,0, "loan");  // Negative balance for loan
+        super(accountNo, accountHolderName, -loanAmount, "loan");  // Set initial balance as negative loan amount
         this.interestRate = interestRate;
         this.tenureMonths = tenureMonths;
         this.emiPayment = calculateEMI();
         this.transactionCount = 0;
+        this.totalRepaidAmount = 0;
     }
 
     // Calculate EMI using standard formula
@@ -23,9 +25,9 @@ public class LoanAccount extends BankAccount{
 
     // Calculate interest for the loan
     public void calculateInterest() {
-        double interest = Math.abs(getCurrentBalance()) * (interestRate / 100);
+        double interest = Math.abs(getCurrentBalance()) * (interestRate / 100) / 12;
         setCurrentBalance(getCurrentBalance() - interest);
-        System.out.println("Interest Charged: ₹" + interest + ". Updated Loan Balance: ₹" + getCurrentBalance());
+        System.out.println("Monthly Interest Charged: ₹" + interest + ". Updated Loan Balance: ₹" + getCurrentBalance());
     }
 
     // Pay EMI method
@@ -36,8 +38,9 @@ public class LoanAccount extends BankAccount{
         }
 
         setCurrentBalance(getCurrentBalance() + amount);
+        totalRepaidAmount += amount;
         transactionCount++;
-        System.out.println("Payment of ₹" + amount + " received. Remaining Loan Balance: ₹" + getCurrentBalance());
+        System.out.println("EMI Payment of ₹" + amount + " received. Remaining Loan Balance: ₹" + getCurrentBalance());
 
         if (getCurrentBalance() >= 0) {
             System.out.println("Congratulations! Your loan is fully repaid.");
@@ -61,10 +64,14 @@ public class LoanAccount extends BankAccount{
         return false;
     }
 
-
     // Get remaining loan amount
     public double getRemainingLoanAmount() {
         return Math.abs(getCurrentBalance());
+    }
+
+    // Get total repaid amount
+    public double getAmountRepaid() {
+        return totalRepaidAmount;
     }
 
     @Override
@@ -75,6 +82,8 @@ public class LoanAccount extends BankAccount{
     @Override
     public void deposit(double amount) {
         setCurrentBalance(this.getCurrentBalance() + amount);
+        totalRepaidAmount += amount;
+        System.out.println("Payment of ₹" + amount + " received. Remaining Loan Balance: ₹" + getCurrentBalance());
         if (getCurrentBalance() >= 0) {
             System.out.println("Loan fully repaid.");
         }

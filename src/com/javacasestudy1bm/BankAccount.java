@@ -19,8 +19,6 @@ abstract public class BankAccount {
         this.tCount = tCount;
     }
 
-
-
     public static double getMinBalance() {
         return minBalance;
     }
@@ -74,28 +72,9 @@ abstract public class BankAccount {
         this.accountType = accountType;
     }
 
-    abstract public  void deposit(double depositAmount);
+    abstract public void deposit(double depositAmount);
 
-//    abstract public  void deposit(double depositAmount) {
-//        setCurrentBalance(this.getCurrentBalance() + depositAmount);
-//        trr[tCount++] = new TransactionHistory(123457, "deposit", depositAmount, LocalDate.now(), LocalTime.now());
-//        System.out.println("Deposited ₹" + depositAmount + ". Updated balance: ₹" + this.getCurrentBalance());
-//    }
-
-     abstract public void withdraw(double withdrawAmount);
-//    public void withdraw(double withdrawAmount) {
-//        if (withdrawAmount <= 0) {
-//            System.out.println("Invalid withdrawal amount.");
-//            return;
-//        }
-//        if (currentBalance - withdrawAmount < minBalance) {
-//            System.out.println("Insufficient funds. Maintain min balance of ₹" + minBalance);
-//            return;
-//        }
-//        setCurrentBalance(getCurrentBalance() - withdrawAmount);
-//        trr[tCount++] = new TransactionHistory(123458, "withdraw", withdrawAmount, LocalDate.now(), LocalTime.now());
-//        System.out.println("Deposited ₹" + withdrawAmount + ". Updated balance: ₹" + this.getCurrentBalance());
-//    }
+    abstract public void withdraw(double withdrawAmount);
 
     public double calTotalWithdraw() {
         double tempTotalWithdrawAmount = 0;
@@ -132,7 +111,7 @@ abstract public class BankAccount {
         for (int i = 0; i < tCount; i++) {
             if ((trr[i].getTransactionDate().isAfter(startDate) || trr[i].getTransactionDate().isEqual(startDate)) &&
                     (trr[i].getTransactionDate().isBefore(endDate) || trr[i].getTransactionDate().isEqual(endDate))) {
-                trr[i].displatSingleTransaction();
+                trr[i].displaySingleTransaction();
             }
         }
     }
